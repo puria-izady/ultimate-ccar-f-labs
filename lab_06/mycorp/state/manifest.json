@@ -1,0 +1,35 @@
+{
+  "investigation": "TKT-0031, a refund retry that charged a customer twice",
+  "baseline_commit": null,
+  "phases": [
+    {
+      "id": "read-the-ticket",
+      "question": "What happened, when, and what is the ticket's status?",
+      "status": "todo",
+      "files_read": [],
+      "summary": null
+    },
+    {
+      "id": "trace-the-retry",
+      "question": "Where does the retry live, and what does it present to the gateway on its second attempt?",
+      "status": "todo",
+      "files_read": [],
+      "summary": null
+    },
+    {
+      "id": "locate-the-key",
+      "question": "Where would an idempotency key have to be created for the retry to be safe?",
+      "status": "todo",
+      "files_read": [],
+      "summary": null
+    },
+    {
+      "id": "choose-the-owner",
+      "question": "Does the gateway client own the key for the attempt sequence, or does the caller create it and pass it in?",
+      "status": "todo",
+      "files_read": [],
+      "summary": null
+    }
+  ],
+  "open_questions": []
+}

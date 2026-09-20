@@ -1,0 +1,19 @@
+[project]
+name = "ccarf-labs"
+version = "0.2.0"
+description = "Guided notebooks for the Ultimate CCAR-F course. One environment for every lab."
+requires-python = ">=3.10"
+dependencies = [
+    "claude-agent-sdk",
+    "anthropic",
+    "mcp>=1.23,<2",
+    "jsonschema",
+    "pydantic",
+    "python-dotenv",
+    "jupyterlab",
+    "pytest",
+    "ipykernel",
+]
+
+[tool.uv]
+package = false

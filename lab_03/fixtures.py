@@ -102,7 +102,7 @@ def _invoices() -> list[dict]:
     ]
 
 
-def build(workspace: Path) -> Path:
+def build(workspace: Path) -> None:
     """Write the data the tools read, and the policy the agent is measured against."""
     data = Path(workspace) / "data"
     data.mkdir(parents=True, exist_ok=True)
@@ -116,4 +116,3 @@ def build(workspace: Path) -> Path:
           f"{len(tables['invoices'])} invoices")
     print("policy.md: 30 day window, own site only, 500 pound agent limit, "
           "and nothing at all about competitors")
-    return data

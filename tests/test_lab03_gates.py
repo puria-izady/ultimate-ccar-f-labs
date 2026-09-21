@@ -33,7 +33,8 @@ REFUND = {"order_id": "ORD-0003", "customer_id": "CUST-0001", "amount": 89.99,
 @pytest.fixture(autouse=True)
 def workspace(tmp_path, monkeypatch):
     """Build the fixture somewhere disposable and point the tools at it."""
-    monkeypatch.setattr(T, "DATA", fixtures.build(tmp_path))
+    fixtures.build(tmp_path)
+    monkeypatch.setattr(T, "DATA", tmp_path / "data")
     T.reset()
     H.reset()
 

@@ -53,6 +53,11 @@ class Lab:
         The workspace is the sandbox: it is gitignored, it is what the terminal steps
         `cd` into, and deleting it and rerunning is always safe. Editing a staged copy
         is fine, but the checked-in original wins the next time this runs.
+
+        A staged directory is put on `sys.path`, because staged Python is meant to be
+        imported. That matters for more than convenience here: a server resolves its
+        data directory relative to its own file, so the staged copy finds the workspace
+        corpus and the checked-in original would not.
         """
         landed = []
         for name in names:
@@ -64,6 +69,8 @@ class Lab:
                 source, destination, dirs_exist_ok=True,
                 ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store"),
             )
+            if str(destination) not in sys.path:
+                sys.path.insert(0, str(destination))
             landed.append(destination)
         return landed
 

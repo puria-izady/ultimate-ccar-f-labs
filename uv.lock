@@ -218,6 +218,7 @@ dependencies = [
     { name = "jupyterlab" },
     { name = "mcp" },
     { name = "pydantic" },
+    { name = "pygments" },
     { name = "pytest" },
     { name = "python-dotenv" },
 ]
@@ -231,6 +232,7 @@ requires-dist = [
     { name = "jupyterlab" },
     { name = "mcp", specifier = ">=1.23,<2" },
     { name = "pydantic" },
+    { name = "pygments" },
     { name = "pytest" },
     { name = "python-dotenv" },
 ]

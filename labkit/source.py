@@ -108,11 +108,41 @@ def source(target, *names: str, comments: bool = True) -> str:
     return "\n".join(chunks).rstrip("\n")
 
 
+# The labs are read on a dark screen, so a code block is rendered on a dark card. The
+# colours are written onto the spans themselves rather than into a stylesheet, because
+# IPython's own `Code` display scopes its stylesheet to a class only the classic
+# notebook sets: everywhere else its output arrives half-uncoloured, on a white card.
+THEME = "github-dark"
+# Single quotes: this stack is interpolated into a double-quoted style attribute.
+FONT = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace"
+
+
+def _card(code: str) -> str:
+    """One definition as syntax-highlighted HTML, self-contained enough to travel."""
+    from pygments import highlight
+    from pygments.formatters import HtmlFormatter
+    from pygments.lexers import PythonLexer
+    from pygments.token import Token
+
+    formatter = HtmlFormatter(style=THEME, noclasses=True, nowrap=True)
+    style = formatter.style
+    body = highlight(code, PythonLexer(), formatter).rstrip("\n")
+    foreground = style.style_for_token(Token.Text).get("color") or "e6edf3"
+    return (
+        f'<div style="background:{style.background_color};border-radius:6px;'
+        f'padding:12px 14px;overflow-x:auto">'
+        f'<pre style="margin:0;padding:0;background:none;border:none;'
+        f'color:#{foreground};font-family:{FONT};font-size:0.9em;line-height:1.45">'
+        f"{body}</pre></div>"
+    )
+
+
 def show_source(target, *names: str, comments: bool = True) -> None:
     """Render a definition as syntax-highlighted Python, inline in the notebook."""
-    from IPython.display import Code, display
+    from IPython.display import display
 
-    display(Code(data=source(target, *names, comments=comments), language="python"))
+    code = source(target, *names, comments=comments)
+    display({"text/html": _card(code), "text/plain": code}, raw=True)
 
 
 @dataclass(frozen=True)

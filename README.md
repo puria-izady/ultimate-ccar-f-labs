@@ -103,6 +103,31 @@ context in a way that single calls do not.
 On a Claude subscription, five of the six labs cost you nothing beyond what you already pay.
 Only Lab 5 needs API billing, and it is the cheapest of the set.
 
+## Where the code lives
+
+A notebook cell should hold the thing the lab is teaching and not much else. So the
+primitives are in the cells: the MCP servers, the tool and agent definitions, the hooks, the
+run options, the schemas. Everything around them lives in a module you can open beside the
+notebook.
+
+| Where | What is in it |
+|---|---|
+| `labkit/` | Shared plumbing. Finding the workspace and the credential, running an agent and collecting what it did, printing a result, calling a hook or a tool offline. Nothing in it is a lesson. |
+| `lab_0N/fixtures.py`, `corpus.py`, `documents.py` | The data a lab serves. Worth reading once; not worth a hundred lines of a notebook. |
+| `lab_01/servers/` | The five MCP servers, as real Python. The notebook stages them into `workspace/` and shows you the parts that matter. |
+| `lab_03/support/` | The four support tools and the four hooks. |
+| `lab_02/research_tools.py`, `lab_06/mycorp_lab.py` | The same idea, for those two labs. |
+
+You are meant to open these. `labkit.show_source(...)` in a notebook renders one definition
+out of one of them, so the cell shows you the tool you are about to call rather than the
+hundred lines around it. But the file is right there, and editing it and restarting the
+kernel is a good way to break things on purpose.
+
+`uv sync` installs this repository into its own environment, which is what lets every
+notebook write `import labkit` from its own folder with no path juggling in a cell. If you
+pull a change to `labkit/` it takes effect on the next kernel restart; there is nothing to
+reinstall.
+
 ## Working directories, and rerunning a lab
 
 Labs 1, 3, 5 and 6 write a `workspace/` directory beside their notebook, and Lab 2 writes an
@@ -112,8 +137,10 @@ delete its `workspace/` or `out/` folder and run the notebook from the top. That
 safe, and it is the fastest way to get back to a clean start.
 
 Two things follow from this. Part B of a two-part lab expects part A to have run, because it
-uses the workspace part A wrote. And `lab_06/mycorp/` is the one fixture that is checked in
-rather than generated, so leave that one alone and let the notebook copy it.
+uses the workspace part A wrote. And nothing you find inside a `workspace/` is the original:
+the labs copy their servers and their data in from the checked-in files beside the notebook,
+so an edit you make in there is replaced the next time the first cell runs. Edit the
+checked-in file if you want the change to stick. `lab_06/mycorp/` works the same way.
 
 The notebooks are committed unexecuted, with no saved outputs. If you want to reset one after
 running it, `git checkout` the notebook.

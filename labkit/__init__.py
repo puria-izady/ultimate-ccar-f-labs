@@ -1,9 +1,9 @@
 """labkit: the plumbing the lab notebooks do not need to show you.
 
 The labs are about MCP servers, tool definitions, agent definitions, hooks and the
-options you run an agent under. Everything else — finding the workspace, reading the
-credential, driving a run, printing a result — is here, so a notebook cell holds the
-primitive and the proof and very little else.
+options you run an agent under. Everything else is here: finding the workspace, reading the
+credential, driving a run, printing a result. So a notebook cell holds the primitive and the
+proof and very little else.
 
 Nothing here is a lesson. Read it if you are curious; you never have to.
 

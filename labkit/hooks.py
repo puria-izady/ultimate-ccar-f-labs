@@ -1,9 +1,9 @@
 """Calling a hook without a model in the loop.
 
 A hook is an ordinary async function, so the cheapest way to prove one works is to
-call it. The SDK hands it three arguments — the event data, the tool use id, and a
-context — and this builds all three the way the SDK really does, so what the notebook
-proves offline is what will happen on a live run.
+call it. The SDK hands it three arguments, the event data, the tool use id and a context,
+and this builds all three the way the SDK really does, so what the notebook proves offline
+is what will happen on a live run.
 """
 
 from __future__ import annotations

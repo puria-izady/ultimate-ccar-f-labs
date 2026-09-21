@@ -1,7 +1,7 @@
 """Lab 3's gates, exercised the way the SDK calls them.
 
-These are the lab's central claim — that a rule written as code holds on every run —
-so they get real tests rather than only a notebook cell.
+These are the lab's central claim, that a rule written as code holds on every run, so they
+get real tests rather than only a notebook cell.
 """
 
 import asyncio

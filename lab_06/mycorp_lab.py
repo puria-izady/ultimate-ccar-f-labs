@@ -1,7 +1,7 @@
 """Building and measuring the MyCorp working copy.
 
 Lab 6 does not call a model from a cell. Everything the model does happens in a terminal,
-in `claude`, using the prompts the notebooks hold — so what is left here is repository
+in `claude`, using the prompts the notebooks hold. So what is left here is repository
 plumbing and measurement, and none of it is the lesson.
 
 The measurements are worth knowing the shape of, because they are the same moves a session

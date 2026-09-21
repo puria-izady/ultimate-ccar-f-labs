@@ -111,3 +111,13 @@ def test_tool_specs_reads_both_decorator_forms_without_importing(sdk_module, fas
     # long rewritten descriptions in lab 1 readable in a table.
     assert fast[1].description.startswith("Search the ticket queue")
     assert fast[1].description.endswith("source code.")
+
+
+def test_a_function_slices_itself_but_a_module_gives_the_whole_file():
+    """show_source(some_function) should show that function, not its module."""
+    from labkit import extract
+    from labkit.extract import forced_call
+
+    assert source(forced_call).startswith("def forced_call(")
+    assert "def show_record" not in source(forced_call)
+    assert source(extract).startswith('"""The Claude API')

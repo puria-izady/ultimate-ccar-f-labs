@@ -21,19 +21,24 @@ from pathlib import Path
 __all__ = ["source", "show_source", "tool_specs", "ToolSpec"]
 
 
-def _resolve(target) -> tuple[Path, str]:
-    """A path, a module, a function, or an SDK tool object -> the file it lives in."""
+def _resolve(target) -> tuple[Path, str, str | None]:
+    """A path, a module, a function, or an SDK tool object -> the file it lives in.
+
+    The third value is the definition the target names, if it names one. Handing this
+    function a function means "show me that function", not "show me its whole module".
+    """
     if isinstance(target, (str, Path)):
         path = Path(target)
         if not path.exists():
             raise FileNotFoundError(f"no such file: {path}")
-        return path, path.read_text(encoding="utf-8")
+        return path, path.read_text(encoding="utf-8"), None
     handler = getattr(target, "handler", None)      # an SdkMcpTool keeps the body here
     if handler is not None:
         target = handler
     file = inspect.getsourcefile(target) or inspect.getfile(target)
     path = Path(file)
-    return path, path.read_text(encoding="utf-8")
+    own = None if inspect.ismodule(target) else getattr(target, "__name__", None)
+    return path, path.read_text(encoding="utf-8"), own
 
 
 def _span(node) -> tuple[int, int]:
@@ -73,7 +78,8 @@ def source(target, *names: str, comments: bool = True) -> str:
     Names may be functions, classes or module constants, and are returned in the order
     they appear in the file rather than the order you asked for them.
     """
-    path, text = _resolve(target)
+    path, text, own = _resolve(target)
+    names = names or ((own,) if own else ())
     if not names:
         return text.rstrip("\n")
 

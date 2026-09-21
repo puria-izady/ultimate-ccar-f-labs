@@ -208,8 +208,8 @@ css = [
 
 [[package]]
 name = "ccarf-labs"
-version = "0.2.0"
-source = { virtual = "." }
+version = "0.3.0"
+source = { editable = "." }
 dependencies = [
     { name = "anthropic" },
     { name = "claude-agent-sdk" },

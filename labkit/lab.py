@@ -151,8 +151,10 @@ def start(
         if entry not in sys.path:
             sys.path.insert(0, entry)
 
-    if workspace or out:
-        print(f"workspace  {lab.out if out and not workspace else lab.workspace}")
+    if workspace:
+        print(f"workspace  {lab.workspace}")
+    elif out:
+        print(f"output     {lab.out}")
     if model:
         print(f"model      {model}  ({model_env} in {env_file.name})")
     if description:

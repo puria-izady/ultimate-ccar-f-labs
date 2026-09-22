@@ -1,7 +1,7 @@
 # Labs: Ultimate Claude Certified Architect, Foundations (CCAR-F)
 
 These are the hands-on labs for our CCAR-F preparation course. We are Frank Kane and Puria
-Izady, and this repository holds everything you run alongside the videos: six labs, nine
+Izady, and this repository holds everything you run alongside the videos: six labs, eight
 notebooks, and the project fixtures they work on.
 
 Each lab builds one of the architectures from the course, a cell at a time. They are guided
@@ -62,7 +62,7 @@ API directly, and a subscription authenticates the `claude` binary rather than t
 | `lab_03/` | Customer support resolution agent, part B | Chapter 10 | subscription or key |
 | `lab_04/` | Claude Code for continuous integration | Chapter 14 | a GitHub account |
 | `lab_05/` | Structured extraction pipeline | Chapter 16 | a key, and only a key |
-| `lab_06/` | Code generation in a real project, parts A and B | Chapter 19 | Claude Code signed in |
+| `lab_06/` | Code generation in a real project | Chapter 19 | Claude Code signed in |
 
 Run them in order, and run each one after the chapter in the column above. The labs assume the
 ideas from that chapter, and Lab 1 in particular is split across two chapters on purpose: part
@@ -87,11 +87,14 @@ across. The spend lands in your own repository rather than in a cell.
 why it is the only one that insists on a key. Every section calls the API, but the calls are
 single turns over documents of a dozen lines, and a full run measures under two pence.
 
-**Lab 6** is two notebooks, and not one cell of either calls a model. The project it works on,
-`lab_06/mycorp/`, is checked in beside the notebooks so you can read it first. The first cell
+**Lab 6** is one notebook, and not one cell of it calls a model. The project it works on,
+`lab_06/mycorp/`, is checked in beside the notebook so you can read it first. The first cell
 copies it into a working directory and gives that copy a git history. Everything the model
-does happens in a terminal, in `claude`, using the prompts the notebooks hold. So this is the
-lab that wants Claude Code signed in rather than a key in `.env`.
+does happens in a terminal, in `claude`, using the prompts the notebook holds, in one session
+that runs from section 4 to the end. So this is the lab that wants Claude Code signed in
+rather than a key in `.env`. It is also the one lab whose project ships a
+`.claude/settings.json`, because a demonstration that stops for a permission dialog in front
+of every edit is a demonstration about permission dialogs.
 
 ## What it costs
 

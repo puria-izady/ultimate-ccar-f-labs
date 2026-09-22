@@ -14,7 +14,7 @@ NOTEBOOKS = sorted(ROOT.glob("lab_*/*.ipynb"))
 
 
 def test_every_lab_has_its_notebooks():
-    assert len(NOTEBOOKS) == 9, [path.name for path in NOTEBOOKS]
+    assert len(NOTEBOOKS) == 8, [path.name for path in NOTEBOOKS]
 
 
 @pytest.mark.parametrize("path", NOTEBOOKS, ids=lambda p: p.stem)

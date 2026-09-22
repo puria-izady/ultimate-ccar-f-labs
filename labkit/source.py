@@ -18,6 +18,8 @@ import inspect
 from dataclasses import dataclass
 from pathlib import Path
 
+from .show import FONT                      # the card and the transcript panel match
+
 __all__ = ["source", "show_source", "tool_specs", "ToolSpec"]
 
 
@@ -113,8 +115,6 @@ def source(target, *names: str, comments: bool = True) -> str:
 # IPython's own `Code` display scopes its stylesheet to a class only the classic
 # notebook sets: everywhere else its output arrives half-uncoloured, on a white card.
 THEME = "github-dark"
-# Single quotes: this stack is interpolated into a double-quoted style attribute.
-FONT = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace"
 
 
 def _card(code: str) -> str:

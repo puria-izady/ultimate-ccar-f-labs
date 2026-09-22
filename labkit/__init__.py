@@ -17,7 +17,7 @@ from .runner import NO_CONNECTORS, AgentRunner, Call, Run, options
 from .sdktools import call as call_sdk_tool
 from .show import (
     brief, collapse, show_calls, show_cost, show_denials, show_payload, show_reply,
-    show_table, show_tools,
+    show_table, show_tools, show_transcript,
 )
 from .source import ToolSpec, show_source, source, tool_specs
 
@@ -29,6 +29,6 @@ __all__ = [
     "call_sdk_tool",
     "fire", "decision", "updated_output",
     "source", "show_source", "tool_specs", "ToolSpec",
-    "show_calls", "show_reply", "show_cost", "show_denials", "show_payload",
-    "show_table", "show_tools", "collapse", "brief",
+    "show_calls", "show_reply", "show_transcript", "show_cost", "show_denials",
+    "show_payload", "show_table", "show_tools", "collapse", "brief",
 ]

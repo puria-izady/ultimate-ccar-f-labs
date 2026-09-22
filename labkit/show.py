@@ -3,20 +3,30 @@
 A notebook cell should end with a result, not with a paragraph. These helpers cover
 what the agent said, what it called, what a tool returned, and what it cost; anything
 else a cell wants to say belongs in the markdown beside it.
+
+A cell that runs several conversations is the one case printing alone cannot serve: the
+replies are the point and they are far too long to sit in the flow of the notebook.
+`show_transcript` puts them in a panel with its own scrollbar, so they can be read whole
+without pushing the next cell off the screen.
 """
 
 from __future__ import annotations
 
+import html
 import json
 import textwrap
+from itertools import zip_longest
 from typing import Any, Iterable, Mapping, Sequence
 
 __all__ = [
-    "show_calls", "show_reply", "show_cost", "show_denials", "show_payload",
-    "show_table", "show_tools", "collapse", "brief",
+    "show_calls", "show_reply", "show_transcript", "show_cost", "show_denials",
+    "show_payload", "show_table", "show_tools", "collapse", "brief", "FONT",
 ]
 
 ARROW = "→"
+
+# Single quotes: this stack is interpolated into a double-quoted style attribute.
+FONT = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace"
 
 
 def brief(value: Any, width: int = 72) -> str:
@@ -71,6 +81,104 @@ def show_reply(subject, *, limit: int = 500, label: str = "agent") -> None:
         print(f"  {line}")
     if len(text) > limit:
         print("  …")
+
+
+def _turns_of(run) -> list[tuple[str, str]]:
+    """One (customer, agent) pair per turn.
+
+    `converse` records both sides as it goes; a run from before that, or one built by
+    hand, still has its last reply, so it shows as a single unattributed turn.
+    """
+    prompts = list(getattr(run, "prompts", None) or [])
+    replies = list(getattr(run, "replies", None) or [])
+    if not replies and getattr(run, "reply", ""):
+        replies = [run.reply]
+    return list(zip_longest(prompts, replies, fillvalue=""))
+
+
+def _sections(runs, label: str) -> list[tuple[str, list[tuple[str, str]]]]:
+    """Whatever a cell happens to be holding -> [(heading, turns)].
+
+    A suite of conversations is already a mapping of number to run, so that is the
+    shape this takes; a list or a lone run works too.
+    """
+    if isinstance(runs, Mapping):
+        headings = [f"{label} {key}".strip() for key in runs]
+        subjects = list(runs.values())
+    elif isinstance(runs, (list, tuple)):
+        headings = [f"{label} {number}".strip() for number in range(1, len(runs) + 1)]
+        subjects = list(runs)
+    else:
+        headings, subjects = [label], [runs]
+    return [(heading, _turns_of(run)) for heading, run in zip(headings, subjects)]
+
+
+# The labs are read on a dark screen, so the panel is the same dark card the source
+# helper renders code on. Colours are written onto the elements rather than into a
+# stylesheet, because a notebook's output has no stylesheet of its own to extend.
+PANEL = {"background": "#0d1117", "text": "#e6edf3", "quiet": "#8b949e",
+         "heading": "#79c0ff", "rule": "#21262d"}
+
+
+def _panel(sections, height: int, title: str) -> str:
+    def block(speaker: str, said: str, colour: str) -> str:
+        return (f'<div style="margin:8px 0 0;color:{colour};white-space:pre-wrap">'
+                f'<span style="color:{PANEL["quiet"]}">{speaker}: </span>'
+                f"{html.escape(said)}</div>")
+
+    parts = []
+    if title:
+        parts.append(f'<div style="color:{PANEL["quiet"]};margin-bottom:8px">'
+                     f"{html.escape(title)}</div>")
+    for index, (heading, turns) in enumerate(sections):
+        rule = "" if index == 0 else (f'border-top:1px solid {PANEL["rule"]};'
+                                      "margin-top:16px;padding-top:12px;")
+        if heading or rule:
+            parts.append(f'<div style="{rule}color:{PANEL["heading"]};font-weight:600">'
+                         f"{html.escape(heading)}</div>")
+        for prompt, reply in turns:
+            if prompt:
+                parts.append(block("customer", prompt, PANEL["quiet"]))
+            parts.append(block("agent", reply.strip() or "(no final text)", PANEL["text"]))
+    return (
+        f'<div style="background:{PANEL["background"]};border-radius:6px;'
+        f"padding:12px 14px;max-height:{height}px;overflow-y:auto;"
+        f'color:{PANEL["text"]};font-family:{FONT};font-size:0.88em;line-height:1.5">'
+        + "".join(parts) + "</div>"
+    )
+
+
+def _plain(sections, title: str) -> str:
+    lines = [title] if title else []
+    for heading, turns in sections:
+        lines += ["", heading] if heading else [""]
+        for prompt, reply in turns:
+            if prompt:
+                lines.append(f"  customer: {prompt}")
+            lines.append("  agent:")
+            lines += [f"    {line}" for line in
+                      (reply.strip() or "(no final text)").splitlines()]
+    return "\n".join(lines).strip("\n")
+
+
+def show_transcript(runs, *, label: str = "", title: str = "", height: int = 420) -> None:
+    """Every turn of every conversation, in a panel with its own scrollbar.
+
+    Takes the mapping of number to run that a suite of conversations already is, or a
+    list, or one run. `label` prefixes the mapping's keys, so `label="conversation"`
+    heads the sections `conversation 1`, `conversation 2`.
+
+    Nothing is truncated here. A scrollbar is the alternative to picking a limit and
+    hoping the sentence that decides the case falls above it.
+
+    Anywhere the HTML is not rendered, a terminal or nbconvert, the same call falls
+    back to the plain text in the second half of the bundle.
+    """
+    from IPython.display import display
+
+    sections = _sections(runs, label)
+    display({"text/html": _panel(sections, height, title),
+             "text/plain": _plain(sections, title)}, raw=True)
 
 
 def show_cost(run, *, runner=None) -> None:

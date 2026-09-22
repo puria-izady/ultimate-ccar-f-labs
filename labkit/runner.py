@@ -59,7 +59,9 @@ class Run:
     """What one run produced."""
 
     calls: list[Call] = field(default_factory=list)
-    reply: str = ""
+    reply: str = ""                        # the last thing the agent said
+    prompts: list[str] = field(default_factory=list)   # what it was asked, one per turn
+    replies: list[str] = field(default_factory=list)   # what it answered, one per turn
     cost: float = 0.0
     turns: int = 0
     duration_s: float = 0.0
@@ -184,14 +186,17 @@ class AgentRunner:
             if message.structured_output is not None:
                 run.structured_output = message.structured_output
             if message.result:
+                # One result message per turn, so this is the turn's closing word and
+                # `reply` is the last of them.
                 run.reply = message.result
+                run.replies.append(message.result)
             self.spend.append(message.total_cost_usd or 0.0)
 
     async def ask(self, prompt: str, **overrides) -> Run:
         """One prompt, one answer."""
         if self.before:
             self.before()
-        run = Run()
+        run = Run(prompts=[prompt])
         try:
             async for message in query(prompt=prompt, options=self._options(overrides)):
                 self._collect(message, run)
@@ -212,6 +217,7 @@ class AgentRunner:
         run = Run()
         async with ClaudeSDKClient(options=self._options(overrides)) as client:
             for turn in turns:
+                run.prompts.append(turn)
                 await client.query(turn)
                 async for message in client.receive_response():
                     self._collect(message, run)

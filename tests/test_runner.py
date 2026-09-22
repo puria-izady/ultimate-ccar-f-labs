@@ -121,6 +121,15 @@ def test_cost_turns_and_structured_output_are_carried():
     assert runner.total == pytest.approx(0.0412)
 
 
+def test_both_sides_of_every_turn_are_kept():
+    """The transcript panel pairs them, so a missing half would silently misalign it."""
+    runner = AgentRunner(options(model="m"))
+    run = drive(runner, [assistant([Block(text="thinking")]), result(text="the answer")])
+    assert run.prompts == ["anything"]
+    assert run.replies == ["the answer"], "one entry per turn, not per text block"
+    assert run.reply == "the answer"
+
+
 def test_spend_accumulates_across_runs():
     runner = AgentRunner(options(model="m"))
     drive(runner, [result(cost=0.01)])

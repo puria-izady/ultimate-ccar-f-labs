@@ -19,5 +19,5 @@ into a queue of duplicate attempts.
 ## What it costs
 
 A retry that reuses an idempotency key but presents a new request id has charged a customer
-twice (TKT-0031). The retry count lives in `shop/refunds/client.py` and appears once per
-function there, so a change has to be made in each place rather than once.
+twice before now. The retry count lives in `shop/refunds.py` and appears once per function
+there, so a change has to be made in each place rather than once.

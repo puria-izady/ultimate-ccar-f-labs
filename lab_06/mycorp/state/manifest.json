@@ -1,31 +1,17 @@
 {
-  "investigation": "TKT-0031, a refund retry that charged a customer twice",
+  "investigation": "TKT-0054, how a customer is told their refund has been sent",
   "baseline_commit": null,
   "phases": [
     {
-      "id": "read-the-ticket",
-      "question": "What happened, when, and what is the ticket's status?",
-      "status": "todo",
-      "files_read": [],
-      "summary": null
-    },
-    {
-      "id": "trace-the-retry",
-      "question": "Where does the retry live, and what does it present to the gateway on its second attempt?",
-      "status": "todo",
-      "files_read": [],
-      "summary": null
-    },
-    {
-      "id": "locate-the-key",
-      "question": "Where would an idempotency key have to be created for the retry to be safe?",
+      "id": "read-the-adr",
+      "question": "What do the constraints in ADR-0007 rule out, and what is still open?",
       "status": "todo",
       "files_read": [],
       "summary": null
     },
     {
       "id": "choose-the-owner",
-      "question": "Does the gateway client own the key for the attempt sequence, or does the caller create it and pass it in?",
+      "question": "Does the refunds service send the notification itself, or write a row to the outbox?",
       "status": "todo",
       "files_read": [],
       "summary": null

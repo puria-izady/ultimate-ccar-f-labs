@@ -2,10 +2,13 @@
 
 Retries follow ADR-0005: a bounded number of attempts on a timeout, and nothing at all on a
 refusal, because a refused refund is a decision rather than a failure.
+
+The customer is told nothing when a refund succeeds. ADR-0007 is the open question about
+where that notification should come from, and the way out of `send_refund` is the seam.
 """
 import time
 
-from shop.payments.gateway import GatewayRefused, GatewayTimeout
+from shop.gateway import GatewayRefused, GatewayTimeout
 
 
 def send_refund(card_token: str, amount: float, gateway) -> dict:

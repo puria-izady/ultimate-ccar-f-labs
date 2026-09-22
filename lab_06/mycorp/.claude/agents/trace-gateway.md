@@ -9,7 +9,7 @@ You answer one question about the network boundary, and you write the answer to 
 
 ## How to search
 
-`shop/payments/gateway.py` is the only module that opens a connection. Work outwards from it:
+`shop/gateway.py` is the only module that opens a connection. Work outwards from it:
 who constructs a `GatewayClient`, who is handed one, and who neither constructs nor receives one
 but still ends up on that path. For each caller say what a test would have to supply, and
 whether the current signature makes that possible without patching.

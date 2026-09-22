@@ -1,7 +1,7 @@
 """Money helpers.
 
-Amounts are floats everywhere in the shop. ADR-0003 records the decision, what it costs and
-when to revisit it.
+Amounts are floats everywhere in the shop, rounded once at the end of a calculation rather
+than at every step.
 """
 
 DEFAULT_CURRENCY = "GBP"
@@ -17,7 +17,7 @@ def add(a: float, b: float) -> float:
 
 
 def calculate_total_with_tax(lines: list) -> float:
-    """Sum the line amounts and add tax. Rounds once at the end, which ADR-0003 explains."""
+    """Sum the line amounts and add tax. Rounds once at the end, never per line."""
     net = 0.0
     for line in lines:
         net += float(line["amount"]) * int(line.get("quantity", 1))

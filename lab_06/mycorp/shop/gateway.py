@@ -46,7 +46,3 @@ class GatewayClient:
 
     def reverse(self, charge_id: str) -> dict:
         return self._post("/reversals", {"charge_id": charge_id}, 20.0)
-
-    def exchange_rate(self, base: str, quote: str) -> float:
-        """One call per conversion today. TKT-0052 asks for a cache in front of it."""
-        return float(self._post("/rates", {"base": base, "quote": quote}, 5.0)["rate"])

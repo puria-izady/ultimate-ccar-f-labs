@@ -1,0 +1,27 @@
+[project]
+name = "ccarf-labs"
+version = "0.3.0"
+description = "Guided notebooks for the Ultimate CCAR-F course. One environment for every lab."
+requires-python = ">=3.10"
+dependencies = [
+    "claude-agent-sdk",
+    "anthropic",
+    "mcp>=1.23,<2",
+    "jsonschema",
+    "pydantic",
+    "python-dotenv",
+    "jupyterlab",
+    "pygments",
+    "pytest",
+    "ipykernel",
+]
+
+# labkit is installed into the environment, so every notebook can `import labkit`
+# from its own folder without a sys.path line. Edits to labkit/ take effect on the
+# next kernel restart; there is nothing to reinstall.
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["labkit"]

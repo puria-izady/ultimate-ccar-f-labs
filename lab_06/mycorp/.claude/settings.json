@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "sonnet",
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Write",
+      "Bash(python -m pytest:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git status:*)"
+    ],
+    "deny": [
+      "Bash(git push:*)"
+    ]
+  }
+}
